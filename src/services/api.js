@@ -16,10 +16,11 @@ const buildUrl = (url, params) => {
 }
 
 
-export const fetchCharacters = () => {
+export const fetchCharacters = (offset) => {
   const url = baseUrl + endPoint;
   const params = {
     limit: '10',
+    offset,
     ts,
     apikey: keys.publicKey,
     hash

@@ -11,37 +11,76 @@ class App extends Component {
       payload: {
         ids: [],
         characters: []
-      }
+      },
+      window: {
+        width: 0,
+        height: 0,
+      },
+      offset: 1,
+      shouldFetch: false
     }
+
+    this.app;
+
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.getNextPage = this.getNextPage.bind(this);
   }
 
   componentDidMount() {
-    fetchCharacters().then( res => {
-      res.map( (item,index) => {
-        console.log(item)
-        let pl = {};
-        pl[`${item.id}`] = {
-          info: {
-            name: item.name,
-            desc: item.description,
-            image: item.thumbnail.path,
-          },
-          resources: {
-            uris: {
-              comics: {
-                url: item.comics.collectionUrl,
-                collections: item.comics.items
-              }
-            }
-          },
-        };
-
-        let ids = this.state.payload.ids.concat(item.id);
-        let characters = this.state.payload.characters.concat(pl);
-        let payload = { ids, characters };
-        this.setState({ payload });
-      });
+    fetchCharacters(this.state.page).then( res => {
+      this.normalizeData(res);
     });
+
+    this.updateWindowDimensions();
+    this.app.addEventListener('resize', this.updateWindowDimensions)
+  }
+
+  normalizeData(data) {
+    data.map( (item,index) => {
+      let pl = {};
+      pl[`${item.id}`] = {
+        info: {
+          name: item.name,
+          desc: item.description,
+          image: item.thumbnail.path,
+        },
+        resources: {
+          uris: {
+            comics: {
+              url: item.comics.collectionUrl,
+              collections: item.comics.items
+            }
+          }
+        },
+      };
+
+      let ids = this.state.payload.ids.concat(item.id);
+      let characters = this.state.payload.characters.concat(pl);
+      let payload = { ids, characters };
+      this.setState({ payload });
+      this.setState({ offset: this.state.offset + 1 });
+    });
+  }
+
+  updateWindowDimensions() {
+    let windowObj = {};
+    windowObj.height = document.body.clientHeight;
+    windowObj.width = document.body.scrollWidth;
+
+    this.setState({ window: windowObj, shouldFetch: true });
+  }
+
+  getNextPage(loc) {
+    if (loc >= this.app.scrollHeight * 0.8 && this.state.shouldFetch) {
+
+      this.updateWindowDimensions();
+      this.setState({ shouldFetch: false });
+
+      fetchCharacters(this.state.offset + 1).then( res => {
+        this.normalizeData(res);
+      }).then( res => this.setState({ shouldFetch: true }))
+
+    }
   }
 
   renderPayloadList() {
@@ -58,16 +97,12 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.state.window);
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-          { this.state.payload.characters.length > 0 ? this.renderPayloadList() : null }
+      <div className="App"
+           ref={ ref => this.app = ref }
+           onWheel={ (e) => this.getNextPage(e.pageY) }>
+        { this.state.payload.characters.length > 0 ? this.renderPayloadList() : null }
       </div>
     );
   }
