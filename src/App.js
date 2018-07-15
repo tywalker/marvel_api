@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import { fetchCharacters } from './services/api';
+import { fetchCharacters, buildImageUrl } from './services/api';
 import './App.css';
 
 class App extends Component {
@@ -18,6 +18,7 @@ class App extends Component {
   componentDidMount() {
     fetchCharacters().then( res => {
       res.map( (item,index) => {
+        console.log(item)
         let pl = {};
         pl[`${item.id}`] = {
           info: {
@@ -50,6 +51,7 @@ class App extends Component {
       return (
         <div key={ id } className="hero-wrapper">
           <h4>{ item[id].info.name }</h4>
+          <img src={ buildImageUrl(item[id].info.image) } />
         </div>
       );
     })
