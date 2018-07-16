@@ -25,7 +25,12 @@ class SideList extends Component {
   }
 
   getElementScrollPosition() {
-    console.log(this.nameList.scrollTop, this.nameList.scrollHeight)
+    let scrollPos = this.nameList.scrollTop;
+    let listHeight = this.nameList.scrollHeight - this.nameList.clientHeight;
+
+    if (scrollPos >= listHeight * 0.9) {
+      console.log("shouldFire");
+    }
   }
 
   render() {
@@ -37,7 +42,7 @@ class SideList extends Component {
             onWheel={ (e) => this.getElementScrollPosition() }>
         { characters.map( (character, index) => {
           return (
-            <li className="name-item">{ character[ids[index]].info.name }</li>
+            <li key={ ids[index] } className="name-item">{ character[ids[index]].info.name }</li>
           )
         })}
         </ul>
