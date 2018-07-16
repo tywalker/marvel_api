@@ -36,6 +36,7 @@ class App extends Component {
   }
 
   normalizeData(data) {
+    console.log("fetched");
     data.map( (item,index) => {
       let pl = {};
       pl[`${item.id}`] = {
@@ -97,11 +98,16 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.window);
     return (
       <div className="App"
            ref={ ref => this.app = ref }
            onWheel={ (e) => this.getNextPage(e.pageY) }>
+        <div className="search">
+          <input type="text" placeholder="Search Marvel characters">
+
+          </input>
+          <button>Go</button>
+        </div>
         { this.state.payload.characters.length > 0 ? this.renderPayloadList() : null }
       </div>
     );
