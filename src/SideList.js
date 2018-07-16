@@ -5,6 +5,10 @@ import './SideList.css';
 class SideList extends Component {
   constructor() {
     super();
+
+    this.nameList;
+
+    this.getElementScrollPosition = this.getElementScrollPosition.bind(this);
   }
 
   getNextPage(loc) {
@@ -20,11 +24,17 @@ class SideList extends Component {
     }
   }
 
+  getElementScrollPosition() {
+    console.log(this.nameList.scrollTop, this.nameList.scrollHeight)
+  }
+
   render() {
     const { characters, ids } = this.props;
     return (
       <div className="side-list">
-        <ul className="name-list" onWheel={ (e) => console.log(e.pageY) }>
+        <ul className="name-list"
+            ref={ ref => this.nameList = ref }
+            onWheel={ (e) => this.getElementScrollPosition() }>
         { characters.map( (character, index) => {
           return (
             <li className="name-item">{ character[ids[index]].info.name }</li>
