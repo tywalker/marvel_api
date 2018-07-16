@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import { fetchCharacters, buildImageUrl } from './services/api';
+import { fetchCharacters, fetchCharactersFromSearch, buildImageUrl } from './services/api';
 import './App.css';
 
 class App extends Component {
@@ -17,12 +17,14 @@ class App extends Component {
         height: 0,
       },
       offset: 1,
-      shouldFetch: false
+      shouldFetch: false,
+      searchVal: ''
     }
 
     this.app;
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    this.getCharactersFromSearch = this.getCharactersFromSearch.bind(this);
     this.getNextPage = this.getNextPage.bind(this);
   }
 
@@ -35,8 +37,12 @@ class App extends Component {
     this.app.addEventListener('resize', this.updateWindowDimensions)
   }
 
-  normalizeData(data) {
-    console.log("fetched");
+  normalizeData(data, replace = false) {
+    if (replace) {
+      this.setState({
+        payload: { ids: [], characters: [] }
+      });
+    }
     data.map( (item,index) => {
       let pl = {};
       pl[`${item.id}`] = {
@@ -71,6 +77,12 @@ class App extends Component {
     this.setState({ window: windowObj, shouldFetch: true });
   }
 
+  getCharactersFromSearch(val) {
+      fetchCharactersFromSearch(val).then( res => {
+        this.normalizeData(res, true);
+      }).then( res => this.setState({ shouldFetch: true }))
+  }
+
   getNextPage(loc) {
     if (loc >= this.app.scrollHeight * 0.8 && this.state.shouldFetch) {
 
@@ -98,15 +110,19 @@ class App extends Component {
   }
 
   render() {
+    const { searchVal } = this.state;
     return (
       <div className="App"
            ref={ ref => this.app = ref }
            onWheel={ (e) => this.getNextPage(e.pageY) }>
         <div className="search">
-          <input type="text" placeholder="Search Marvel characters">
-
-          </input>
-          <button>Go</button>
+          <input type="text" placeholder="Search Marvel characters"
+          onChange={ (e) => {
+            this.setState({ searchVal: e.target.value })
+          }}/>
+          <button onClick={ () => this.getCharactersFromSearch(searchVal)}>
+            Go
+          </button>
         </div>
         { this.state.payload.characters.length > 0 ? this.renderPayloadList() : null }
       </div>

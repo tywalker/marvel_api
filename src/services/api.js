@@ -37,6 +37,28 @@ export const fetchCharacters = (offset) => {
     .then( json => json.data.results )
 }
 
+export const fetchCharactersFromSearch = (val, offset = 1) => {
+  const url = baseUrl + endPoint;
+  const params = {
+    nameStartsWith: val,
+    limit: '10',
+    offset,
+    ts,
+    apikey: keys.publicKey,
+    hash
+  }
+  return fetch(buildUrl(url, params),
+    {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      mode: 'no-cors'
+    })
+    .then( res => res.json() )
+    .then( json => json.data.results )
+}
+
 export const buildImageUrl = (imgUrl) => {
   let url = imgUrl + '/detail.jpg';
   const params = {
