@@ -19,7 +19,7 @@ const buildUrl = (url, params) => {
 export const fetchCharacters = (offset) => {
   const url = baseUrl + endPoint;
   const params = {
-    limit: '10',
+    limit: '100',
     offset,
     ts,
     apikey: keys.publicKey,
@@ -41,7 +41,7 @@ export const fetchCharactersFromSearch = (val, offset = 1) => {
   const url = baseUrl + endPoint;
   const params = {
     nameStartsWith: val,
-    limit: '10',
+    limit: '100',
     offset,
     ts,
     apikey: keys.publicKey,

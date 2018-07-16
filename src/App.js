@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import { fetchCharacters, fetchCharactersFromSearch, buildImageUrl } from './services/api';
+import SideList from './SideList';
 import './App.css';
 
 class App extends Component {
@@ -110,7 +110,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchVal } = this.state;
+    const { searchVal, payload } = this.state;
     return (
       <div className="App"
            ref={ ref => this.app = ref }
@@ -124,7 +124,8 @@ class App extends Component {
             Go
           </button>
         </div>
-        { this.state.payload.characters.length > 0 ? this.renderPayloadList() : null }
+        <SideList characters={ payload.characters } ids={ payload.ids } />
+        { this.state.payload.characters.length > 1000 ? this.renderPayloadList() : null }
       </div>
     );
   }
