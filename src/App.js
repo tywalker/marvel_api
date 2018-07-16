@@ -25,16 +25,6 @@ class App extends Component {
 
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     this.getCharactersFromSearch = this.getCharactersFromSearch.bind(this);
-    this.getNextPage = this.getNextPage.bind(this);
-  }
-
-  componentDidMount() {
-    fetchCharacters(this.state.page).then( res => {
-      this.normalizeData(res);
-    });
-
-    this.updateWindowDimensions();
-    this.app.addEventListener('resize', this.updateWindowDimensions)
   }
 
   normalizeData(data, replace = false) {
@@ -83,19 +73,6 @@ class App extends Component {
       }).then( res => this.setState({ shouldFetch: true }))
   }
 
-  getNextPage(loc) {
-    if (loc >= this.app.scrollHeight * 0.8 && this.state.shouldFetch) {
-
-      this.updateWindowDimensions();
-      this.setState({ shouldFetch: false });
-
-      fetchCharacters(this.state.offset + 1).then( res => {
-        this.normalizeData(res);
-      }).then( res => this.setState({ shouldFetch: true }))
-
-    }
-  }
-
   renderPayloadList() {
     const { characters, ids } = this.state.payload;
     return characters.map( (item, index) => {
@@ -113,8 +90,7 @@ class App extends Component {
     const { searchVal, payload } = this.state;
     return (
       <div className="App"
-           ref={ ref => this.app = ref }
-           onWheel={ (e) => this.getNextPage(e.pageY) }>
+           ref={ ref => this.app = ref } >
         <div className="search">
           <input type="text" placeholder="Search Marvel characters"
           onChange={ (e) => {
