@@ -30,7 +30,13 @@
   border: none;
   border-bottom: 1px solid #d0d0d0;
 }
-
+.detail-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.character-detail {
+  width: 65%;
+}
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

@@ -8,27 +8,27 @@ class App extends Component {
     super();
 
     this.state = {
-      payload: {
-        ids: [],
-        characters: []
-      },
-      window: {
-        width: 0,
-        height: 0,
-      },
-      offset: 1,
-      shouldfetch: false,
-      searchVal: ''
+      detailCharacter: {
+        info: {
+          name: '',
+          desc: '',
+          image: ''
+        }
+
+      }
     }
 
-    this.app;
-
     this.getCharactersFromSearch = this.getCharactersFromSearch.bind(this);
+    this.setDetailCharacter = this.setDetailCharacter.bind(this);
+  }
+
+  setDetailCharacter(character) {
+    this.setState({ detailCharacter: character });
   }
 
   getCharactersFromSearch(val) {
     fetchCharactersFromSearch(val).then( res => {
-      this.normalizeData(res, true);
+      this.normalizeData(res, true)
     }).then( res => this.setState({ shouldFetch: true }))
   }
 
@@ -46,7 +46,12 @@ class App extends Component {
             Go
           </button>
         </div>
-        <SideList characters={ payload.characters } ids={ payload.ids } />
+        <div className="detail-wrapper">
+          <SideList setDetailCharacter={ this.setDetailCharacter } />
+          <div className="character-detail">
+            { this.state.detailCharacter.info.name }
+          </div>
+        </div>
       </div>
     );
   }

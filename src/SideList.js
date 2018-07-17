@@ -107,7 +107,11 @@ class SideList extends Component {
             onWheel={ (e) => this.getElementScrollPosition() }>
         { characters.map( (character, index) => {
           return (
-            <li key={ ids[index] } className="name-item">{ character[ids[index]].info.name }</li>
+            <li key={ ids[index] }
+                className="name-item"
+                onClick={ () => this.props.setDetailCharacter(character[ids[index]]) }>
+              { character[ids[index]].info.name }
+            </li>
           )
         })}
         </ul>
