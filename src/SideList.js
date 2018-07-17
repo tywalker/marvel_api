@@ -32,7 +32,7 @@ class SideList extends Component {
     });
 
     this.updateWindowDimensions();
-    this.sideList.addEventListener('resize', this.updateWindowDimensions)
+    this.nameList.addEventListener('resize', this.updateWindowDimensions)
   }
 
   normalizeData(data, replace = false) {
@@ -43,6 +43,7 @@ class SideList extends Component {
     }
     data.map( (item,index) => {
       let pl = {};
+
       pl[`${item.id}`] = {
         info: {
           name: item.name,
@@ -62,39 +63,39 @@ class SideList extends Component {
       let ids = this.state.payload.ids.concat(item.id);
       let characters = this.state.payload.characters.concat(pl);
       let payload = { ids, characters };
+
       this.setState({ payload });
       this.setState({ offset: this.state.offset + 1 });
     });
   }
 
   updateWindowDimensions() {
-    let windowObj = {};
-    windowObj.height = this.nameList.clientHeight;
-    windowObj.width = this.nameList.scrollWidth;
+    let nameListObj = {};
 
-    this.setState({ window: windowObj, shouldFetch: true });
+    nameListObj.height = this.nameList.clientHeight;
+    nameListObj.width = this.nameList.scrollWidth;
+
+    this.setState({ window: nameListObj, shouldFetch: true });
   }
 
   getNextPage() {
+    if (this.state.shouldFetch) {
+      this.updateWindowDimensions();
+      this.setState({ shouldFetch: false });
 
-    this.updateWindowDimensions();
-    this.setState({ shouldFetch: false });
-
-    fetchCharacters(this.state.offset + 1).then( res => {
-      this.normalizeData(res);
-    }).then( res => this.setState({ shouldFetch: true }))
-
+      fetchCharacters(this.state.offset + 1).then( res => {
+        this.normalizeData(res);
+      }).then( res => this.setState({ shouldFetch: true }))
+    }
   }
 
   getElementScrollPosition() {
-
     let scrollPos = this.nameList.scrollTop;
     let listHeight = this.nameList.scrollHeight - this.nameList.clientHeight;
 
-    if (scrollPos >= listHeight * 0.9) {
+    if (scrollPos >= listHeight * 0.8) {
       this.getNextPage();
     }
-
   }
 
   render() {
