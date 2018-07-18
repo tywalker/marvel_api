@@ -35,6 +35,7 @@ export const fetchCharacters = (offset) => {
     })
     .then( res => res.json() )
     .then( json => json.data.results )
+    .catch( error => console.log(error) )
 }
 
 export const fetchCharactersFromSearch = (val, offset = 1) => {
@@ -57,6 +58,7 @@ export const fetchCharactersFromSearch = (val, offset = 1) => {
     })
     .then( res => res.json() )
     .then( json => json.data.results )
+    .catch( error => console.log(error) )
 }
 
 export const buildImageUrl = (imgUrl) => {

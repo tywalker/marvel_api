@@ -41,6 +41,7 @@ class SideList extends Component {
         payload: { ids: [], characters: [] }
       });
     }
+
     data.map( (item,index) => {
       let pl = {};
 

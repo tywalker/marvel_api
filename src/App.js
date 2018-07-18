@@ -14,7 +14,6 @@ class App extends Component {
           desc: '',
           image: ''
         }
-
       }
     }
 
@@ -33,7 +32,7 @@ class App extends Component {
   }
 
   render() {
-    const { searchVal, payload } = this.state;
+    const { searchVal, payload, detailCharacter } = this.state;
     return (
       <div className="App"
            ref={ ref => this.app = ref } >
@@ -49,7 +48,9 @@ class App extends Component {
         <div className="detail-wrapper">
           <SideList setDetailCharacter={ this.setDetailCharacter } />
           <div className="character-detail">
-            { this.state.detailCharacter.info.name }
+            <h1>{ detailCharacter.info.name }</h1>
+            <p>{ detailCharacter.info.desc }</p>
+            <img src={ buildImageUrl(detailCharacter.info.image) } />
           </div>
         </div>
       </div>

@@ -13,7 +13,7 @@
   padding: 20px 10px;
   list-style: none;
   border: 1px solid #f0f0f0;
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 }
 .name-list li:hover {
   background-color: #e0e0e0;
