@@ -9,7 +9,13 @@ class App extends Component {
 
   render() {
     return (
-      <Characters />
+      <div className="main-wrapper">
+        <ul>
+          <li>json</li>
+          <li>Characters</li>
+        </ul>
+        <Characters />
+      </div>
     );
   }
 }
